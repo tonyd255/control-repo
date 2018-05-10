@@ -7,10 +7,11 @@ class system_users::admins {
   # check to see if windows
   if $facts['kernel'] == 'windows'
   {
+    # check group
     #greate  user { 'name':
     user { 'admin':
         ensure => present,
-        groups => 'staff',
+        groups => ['staff','Users'],
     }
   }
   else
