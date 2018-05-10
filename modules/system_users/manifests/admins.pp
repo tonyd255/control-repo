@@ -2,16 +2,28 @@ class system_users::admins {
   #create staff group { 'name':
   group { 'staff':
     ensure=>present,
-    gid=>5001,
   }
-  #greate  user { 'name':
-  user { 'admin':
-    ensure=>present,
-    shell=>'/bin/csh',
-    groups=>'staff',
-    require=>Package['csh'],
+  # check to see if windows
+  if $facts['kernel'] == 'windows'
+  {
+    #greate  user { 'name':
+    user { 'admin':
+      ensure=>present,
+      groups=>'staff',
+    }
   }
-  package { 'csh':
-    ensure => latest,
+  else
+  {
+    # add pacakge csh
+    package { 'csh':
+      ensure => latest,
+    }
+  #create  user { 'name':
+    user { 'admin':
+      ensure=>present,
+      shell=>'/bin/csh',
+      groups=>'staff',
+      require=>Package['csh'],
+    }
   }
 }
