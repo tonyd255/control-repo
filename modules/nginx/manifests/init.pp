@@ -36,18 +36,18 @@ if  $facts['kernel'] == 'windows'
       owner   => 'root',
       group   => 'root',
       content => template("${module_name}/default.erb"),
-      require => Package['ngnix'],
+      require => Package['nginx'],
       notify  => Service['nginx'],
     }
     service {'nginx':
       ensure   => running,
-      require  => Package['ngnix'],
+      require  => Package['nginx'],
     }
     file { $docroot:
       owner    => 'www-data',
       group    => 'www-data',
       mode     => '0755',
-      require  => Package['ngnix'],
+      require  => Package['nginx'],
     }
     file { "{$docroot}/index.html":
       owner    => 'www-data',
