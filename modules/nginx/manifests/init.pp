@@ -1,7 +1,7 @@
 # this class exercise 8.2
 class nginx (
   String $docroot = "/var/www",
-  String $port    = "80",
+  String $portnumber    = "80",
   )
 {
 # this should work for both windows and unix system_users
