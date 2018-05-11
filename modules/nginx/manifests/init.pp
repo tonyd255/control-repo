@@ -8,12 +8,13 @@ class nginx (
 # if windows do this other wise do the other
 if  $facts['kernel'] == 'windows'
   {
+      include chocolatey
   # check for the
-    file { 'c:\ProgramData\nginx\html':
-      ensure => present,
-      mode   => '0755',
-      owner  => 'Admin',
-    }
+    # file { 'c:\ProgramData\nginx\html':
+    #   ensure => present,
+    #   mode   => '0755',
+    #   owner  => 'Admin',
+    # }
     package { 'nginx':
       ensure   => installed,
       provider => 'chocolatey'
@@ -29,31 +30,31 @@ if  $facts['kernel'] == 'windows'
     package { 'nginx':
       ensure  => latest,
     }
-    # file { '/etc/nginx/sites-available/default':
-    #   ensure  => file,
-    #   mode    => '0755',
-    #   owner   => 'root',
-    #   group   => 'root',
-    #   content => template("${module_name}/default.erb"),
-    #   require => Package['ngnix'],
-    #   notify  => Service['nginx'],
-    # }
-    # service {'nginx':
-    #   ensure   => running,
-    #   require  => Package['ngnix'],
-    # }
-    # file { $docroot:
-    #   owner    => 'www-data',
-    #   group    => 'www-data',
-    #   mode     => '0755',
-    #   require  => Package['ngnix'],
-    # }
-    # file { "{$docroot}/index.html":
-    #   owner    => 'www-data',
-    #   group    => 'www-data',
-    #   mode     => '0755',
-    #   source   => "puppet:///modules/${module_name}/index.html",
-    #   require  => File["${docroot}"],
-    # }
+    file { '/etc/nginx/sites-available/default':
+      ensure  => file,
+      mode    => '0755',
+      owner   => 'root',
+      group   => 'root',
+      content => template("${module_name}/default.erb"),
+      require => Package['ngnix'],
+      notify  => Service['nginx'],
+    }
+    service {'nginx':
+      ensure   => running,
+      require  => Package['ngnix'],
+    }
+    file { $docroot:
+      owner    => 'www-data',
+      group    => 'www-data',
+      mode     => '0755',
+      require  => Package['ngnix'],
+    }
+    file { "{$docroot}/index.html":
+      owner    => 'www-data',
+      group    => 'www-data',
+      mode     => '0755',
+      source   => "puppet:///modules/${module_name}/index.html",
+      require  => File["${docroot}"],
+    }
   }
 }
