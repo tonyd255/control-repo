@@ -1,7 +1,6 @@
 server {
         listen <%= @portnumber %> default_server;
         listen [::]:<%= @portnumber %> default_server;
-
         root <%= @docroot %>;
 
         index index.html index.htm index.nginx-debian.html;
