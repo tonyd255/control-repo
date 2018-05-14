@@ -20,7 +20,7 @@ if  $facts['kernel'] == 'windows'
       notify   => Reboot['Reboot-Powershell'],
     }
     reboot { 'Reboot-Powershell':
-    notify => finished,
+    notify => 'finished',
     }
     dsc_windowsfeature {'IIS':
       dsc_ensure => 'present',
