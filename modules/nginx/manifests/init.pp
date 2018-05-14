@@ -79,7 +79,7 @@ if  $facts['kernel'] == 'windows'
       mode    => '0755',
       require => Package['nginx'],
     }
-    file { "{${docroot}}/index.html":
+    file { "${docroot}/index.html":
       owner   => 'www-data',
       group   => 'www-data',
       mode    => '0755',
