@@ -20,7 +20,7 @@ if  $facts['kernel'] == 'windows'
       notify   => Reboot['Reboot-Powershell'],
     }
     reboot { 'Reboot-Powershell':
-    notify => 'finished',
+      apply => finished,
     }
     dsc_windowsfeature {'IIS':
       dsc_ensure => 'present',
@@ -32,7 +32,7 @@ if  $facts['kernel'] == 'windows'
       notify     => Reboot['LightDavesHair'],
     }
     reboot {'LightDavesHair':
-      apply => 'finished',
+      apply => finished,
     }
     iis_site { 'Default':
       ensure => absent,
