@@ -1,7 +1,7 @@
 # this class exercise 8.2
 class nginx (
-  String $docroot = "/var/www",
-  String $portnumber    = "80",
+  String $docroot       = '/var/www',
+  String $portnumber    = '80',
   )
 {
 # this should work for both windows and unix system_users
@@ -15,9 +15,37 @@ if  $facts['kernel'] == 'windows'
     #   mode   => '0755',
     #   owner  => 'Admin',
     # }
-    package { 'nginx':
-      ensure   => installed,
-      provider => 'chocolatey'
+    package { 'powershell':
+      provider => 'chocolatey',
+      notify   => Reboot['Reboot-Powershell'],
+    }
+    reboot { 'Reboot-Powershell':
+    notify => finished,
+    }
+    dsc_windowsfeature {'IIS':
+      dsc_ensure => 'present',
+      dsc_name   => 'Web-Server',
+    }
+    dsc_windowsfeature {'IIS-Scripting-Tools':
+      dsc_ensure => 'present',
+      dsc_name   => 'Web-Scripting-Tool',
+      notify     => Reboot['LightDavesHair'],
+    }
+    reboot {'LightdavesHair':
+      apply => 'finished',
+    }
+    iis_site { 'minimal':
+      ensure          => 'started',
+      physicalpath    => 'c:\\inetpub\\minimal',
+      applicationpool => 'DefaultAppPool',
+      require         => [File['IIS Minimalists Directory'],
+                      Dsc_windowsfeature['IIS-Scripting-Tools'],
+                      Dsc_windowsfeature['IIS']],
+    }
+
+    file { 'IIS Minimalists Directory':
+      ensure => directory,
+      path   => 'c:\\inetpub\\minimal',
     }
   }
   else
@@ -40,21 +68,21 @@ if  $facts['kernel'] == 'windows'
       notify  => Service['nginx'],
     }
     service {'nginx':
-      ensure   => running,
-      require  => Package['nginx'],
+      ensure  => running,
+      require => Package['nginx'],
     }
     file { $docroot:
-      owner    => 'www-data',
-      group    => 'www-data',
-      mode     => '0755',
-      require  => Package['nginx'],
+      owner   => 'www-data',
+      group   => 'www-data',
+      mode    => '0755',
+      require => Package['nginx'],
     }
-    file { "{$docroot}/index.html":
-      owner    => 'www-data',
-      group    => 'www-data',
-      mode     => '0755',
-      source   => "puppet:///modules/${module_name}/index.html",
-      require  => File["${docroot}"],
+    file { "{${docroot}}/index.html":
+      owner   => 'www-data',
+      group   => 'www-data',
+      mode    => '0755',
+      source  => "puppet:///modules/${module_name}/index.html",
+      require => File[$docroot],
     }
   }
 }
