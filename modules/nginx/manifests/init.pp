@@ -31,8 +31,11 @@ if  $facts['kernel'] == 'windows'
       dsc_name   => 'Web-Scripting-Tool',
       notify     => Reboot['LightDavesHair'],
     }
-    reboot {'LightdavesHair':
+    reboot {'LightDavesHair':
       apply => 'finished',
+    }
+    iis_site { 'Default':
+      ensure => absent,
     }
     iis_site { 'minimal':
       ensure          => 'started',
@@ -42,7 +45,6 @@ if  $facts['kernel'] == 'windows'
                       Dsc_windowsfeature['IIS-Scripting-Tools'],
                       Dsc_windowsfeature['IIS']],
     }
-
     file { 'IIS Minimalists Directory':
       ensure => directory,
       path   => 'c:\\inetpub\\minimal',
